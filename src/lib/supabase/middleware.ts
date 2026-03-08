@@ -4,10 +4,15 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return supabaseResponse;
+  }
+
+  try {
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -22,28 +27,31 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
+    });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const publicPaths = ["/login", "/signup", "/forgot-password", "/reset-password", "/auth/callback", "/accept-invite"];
+    const isPublicPath = publicPaths.some((path) =>
+      request.nextUrl.pathname.startsWith(path)
+    );
+
+    if (!user && !isPublicPath) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
-  );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const publicPaths = ["/login", "/signup", "/forgot-password", "/reset-password", "/auth/callback", "/accept-invite"];
-  const isPublicPath = publicPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (!user && !isPublicPath) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  if (user && isPublicPath && !request.nextUrl.pathname.startsWith("/auth/callback")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+    if (user && isPublicPath && !request.nextUrl.pathname.startsWith("/auth/callback")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+  } catch {
+    // If Supabase auth fails, allow the request through
+    // Pages will handle auth checks themselves
   }
 
   return supabaseResponse;
