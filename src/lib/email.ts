@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // On Resend's free tier, you can only send from onboarding@resend.dev
 // Once you verify your domain in Resend, update this to your own address
 const FROM_EMAIL = "Job Tracker <onboarding@resend.dev>";
@@ -19,6 +17,11 @@ export async function sendInviteEmail({
   role: string;
   inviteUrl: string;
 }) {
+  if (!process.env.RESEND_API_KEY) {
+    return { error: "RESEND_API_KEY not configured" };
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const roleLabel = role.replace("_", " ");
 
   const { error } = await resend.emails.send({
