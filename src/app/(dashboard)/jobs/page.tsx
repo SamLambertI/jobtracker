@@ -41,6 +41,7 @@ export default async function JobsPage({
   const teamMap = new Map((teams ?? []).map((t) => [t.id, t.name]));
 
   const isOwnerOrManager = ["owner", "manager"].includes(profile.role);
+  const canSeeCosts = profile.role !== "operative";
 
   return (
     <div>
@@ -133,16 +134,18 @@ export default async function JobsPage({
                     {job.start_date && <span>{job.start_date}</span>}
                   </div>
                 </div>
-                <div className="ml-4 text-right shrink-0">
-                  <div className="text-sm font-medium text-slate-900">
-                    {formatCurrency(job.quoted_total)}
-                  </div>
-                  {job.actual_total > 0 && (
-                    <div className={`text-xs font-medium ${marginColor}`}>
-                      {margin >= 0 ? "+" : ""}{margin.toFixed(1)}%
+                {canSeeCosts && (
+                  <div className="ml-4 text-right shrink-0">
+                    <div className="text-sm font-medium text-slate-900">
+                      {formatCurrency(job.quoted_total)}
                     </div>
-                  )}
-                </div>
+                    {job.actual_total > 0 && (
+                      <div className={`text-xs font-medium ${marginColor}`}>
+                        {margin >= 0 ? "+" : ""}{margin.toFixed(1)}%
+                      </div>
+                    )}
+                  </div>
+                )}
               </Link>
             );
           })}

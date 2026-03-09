@@ -65,6 +65,7 @@ export default async function JobDetailPage({
 
   const isOwnerOrManager = profile?.role === "owner" || profile?.role === "manager";
   const canEdit = isOwnerOrManager || profile?.role === "team_leader";
+  const canSeeCosts = profile?.role !== "operative";
   const badge = getStatusBadge(job.status);
   const profit = job.quoted_total - job.actual_total;
   const marginPct = job.quoted_total > 0 ? (profit / job.quoted_total) * 100 : 0;
@@ -157,7 +158,7 @@ export default async function JobDetailPage({
       )}
 
       {/* Profitability traffic light */}
-      {job.actual_total > 0 && (
+      {canSeeCosts && job.actual_total > 0 && (
         <div className={`mt-4 rounded-lg border-2 p-4 ${
           marginPct >= 10
             ? "border-green-300 bg-green-50"
@@ -194,25 +195,27 @@ export default async function JobDetailPage({
       )}
 
       {/* Financial summary */}
-      <div className="mt-4 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="text-xs font-medium uppercase text-slate-400">Quoted</div>
-          <div className="mt-1 text-2xl font-bold text-slate-900">{formatCurrency(job.quoted_total)}</div>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="text-xs font-medium uppercase text-slate-400">Actual</div>
-          <div className="mt-1 text-2xl font-bold text-slate-900">{formatCurrency(job.actual_total)}</div>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="text-xs font-medium uppercase text-slate-400">Profit</div>
-          <div className={`mt-1 text-2xl font-bold ${marginColor}`}>
-            {formatCurrency(profit)}
-            {job.actual_total > 0 && (
-              <span className="ml-1 text-sm">({marginPct >= 0 ? "+" : ""}{marginPct.toFixed(1)}%)</span>
-            )}
+      {canSeeCosts && (
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <div className="text-xs font-medium uppercase text-slate-400">Quoted</div>
+            <div className="mt-1 text-2xl font-bold text-slate-900">{formatCurrency(job.quoted_total)}</div>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <div className="text-xs font-medium uppercase text-slate-400">Actual</div>
+            <div className="mt-1 text-2xl font-bold text-slate-900">{formatCurrency(job.actual_total)}</div>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <div className="text-xs font-medium uppercase text-slate-400">Profit</div>
+            <div className={`mt-1 text-2xl font-bold ${marginColor}`}>
+              {formatCurrency(profit)}
+              {job.actual_total > 0 && (
+                <span className="ml-1 text-sm">({marginPct >= 0 ? "+" : ""}{marginPct.toFixed(1)}%)</span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Quick actions */}
       <div className="mt-4 flex flex-wrap gap-2">
@@ -231,7 +234,7 @@ export default async function JobDetailPage({
       </div>
 
       {/* Cost breakdown by category */}
-      <div className="mt-4 rounded-lg border border-slate-200 bg-white">
+      {canSeeCosts && <div className="mt-4 rounded-lg border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-slate-700">Cost Breakdown</h3>
@@ -296,10 +299,10 @@ export default async function JobDetailPage({
           </tfoot>
         </table>
         </div>
-      </div>
+      </div>}
 
       {/* Quoted cost line items */}
-      {quotedCosts && quotedCosts.length > 0 && (
+      {canSeeCosts && quotedCosts && quotedCosts.length > 0 && (
         <div className="mt-4 rounded-lg border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-4 py-3">
             <h3 className="text-sm font-semibold text-slate-700">Quoted Cost Lines</h3>

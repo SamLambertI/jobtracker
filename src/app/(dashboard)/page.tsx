@@ -55,6 +55,7 @@ export default async function DashboardPage() {
   });
 
   const isOwnerOrManager = ["owner", "manager"].includes(profile.role);
+  const canSeeCosts = profile.role !== "operative";
 
   return (
     <div>
@@ -88,45 +89,49 @@ export default async function DashboardPage() {
             })}
           </div>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="text-xs font-medium uppercase text-slate-400">Total Quoted</div>
-          <div className="mt-1 text-3xl font-bold text-slate-900">{formatCurrency(totalQuoted)}</div>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="text-xs font-medium uppercase text-slate-400">Total Actual</div>
-          <div className="mt-1 text-3xl font-bold text-slate-900">{formatCurrency(totalActual)}</div>
-        </div>
-        <div className={`rounded-lg border-2 p-4 ${
-          totalActual === 0
-            ? "border-slate-200 bg-white"
-            : overallMargin >= 10
-              ? "border-green-300 bg-green-50"
-              : overallMargin >= 0
-                ? "border-amber-300 bg-amber-50"
-                : "border-red-300 bg-red-50"
-        }`}>
-          <div className="text-xs font-medium uppercase text-slate-400">Overall Profit</div>
-          <div className={`mt-1 text-3xl font-bold ${
-            totalActual === 0
-              ? "text-slate-400"
-              : overallMargin >= 10
-                ? "text-green-600"
-                : overallMargin >= 0
-                  ? "text-amber-600"
-                  : "text-red-600"
-          }`}>
-            {formatCurrency(totalProfit)}
-          </div>
-          {totalActual > 0 && (
-            <div className="mt-1 text-sm text-slate-500">
-              {overallMargin >= 0 ? "+" : ""}{overallMargin.toFixed(1)}% margin
+        {canSeeCosts && (
+          <>
+            <div className="rounded-lg border border-slate-200 bg-white p-4">
+              <div className="text-xs font-medium uppercase text-slate-400">Total Quoted</div>
+              <div className="mt-1 text-3xl font-bold text-slate-900">{formatCurrency(totalQuoted)}</div>
             </div>
-          )}
-        </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-4">
+              <div className="text-xs font-medium uppercase text-slate-400">Total Actual</div>
+              <div className="mt-1 text-3xl font-bold text-slate-900">{formatCurrency(totalActual)}</div>
+            </div>
+            <div className={`rounded-lg border-2 p-4 ${
+              totalActual === 0
+                ? "border-slate-200 bg-white"
+                : overallMargin >= 10
+                  ? "border-green-300 bg-green-50"
+                  : overallMargin >= 0
+                    ? "border-amber-300 bg-amber-50"
+                    : "border-red-300 bg-red-50"
+            }`}>
+              <div className="text-xs font-medium uppercase text-slate-400">Overall Profit</div>
+              <div className={`mt-1 text-3xl font-bold ${
+                totalActual === 0
+                  ? "text-slate-400"
+                  : overallMargin >= 10
+                    ? "text-green-600"
+                    : overallMargin >= 0
+                      ? "text-amber-600"
+                      : "text-red-600"
+              }`}>
+                {formatCurrency(totalProfit)}
+              </div>
+              {totalActual > 0 && (
+                <div className="mt-1 text-sm text-slate-500">
+                  {overallMargin >= 0 ? "+" : ""}{overallMargin.toFixed(1)}% margin
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* At-risk jobs */}
-      {atRiskJobs.length > 0 && (
+      {canSeeCosts && atRiskJobs.length > 0 && (
         <div className="mt-6">
           <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
             <span className="inline-block h-2 w-2 rounded-full bg-red-500"></span>
@@ -193,7 +198,7 @@ export default async function DashboardPage() {
                   className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 hover:border-slate-300 hover:shadow-sm"
                 >
                   {/* Traffic light dot */}
-                  <span className={`h-3 w-3 shrink-0 rounded-full ${trafficLight}`}></span>
+                  {canSeeCosts && <span className={`h-3 w-3 shrink-0 rounded-full ${trafficLight}`}></span>}
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -208,16 +213,18 @@ export default async function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-right">
-                    <div className="text-sm font-medium text-slate-900">{formatCurrency(job.quoted_total)}</div>
-                    {job.actual_total > 0 && (
-                      <div className={`text-xs font-bold ${
-                        margin >= 10 ? "text-green-600" : margin >= 0 ? "text-amber-600" : "text-red-600"
-                      }`}>
-                        {margin >= 0 ? "+" : ""}{margin.toFixed(1)}%
-                      </div>
-                    )}
-                  </div>
+                  {canSeeCosts && (
+                    <div className="shrink-0 text-right">
+                      <div className="text-sm font-medium text-slate-900">{formatCurrency(job.quoted_total)}</div>
+                      {job.actual_total > 0 && (
+                        <div className={`text-xs font-bold ${
+                          margin >= 10 ? "text-green-600" : margin >= 0 ? "text-amber-600" : "text-red-600"
+                        }`}>
+                          {margin >= 0 ? "+" : ""}{margin.toFixed(1)}%
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </Link>
               );
             })}
