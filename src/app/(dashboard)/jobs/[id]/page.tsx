@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatCurrency, getStatusBadge, COST_CATEGORIES, STATUS_FLOW } from "@/lib/constants";
 import { deleteJob, updateJobStatus } from "../actions";
+import { ClockButton } from "./clock-button";
 
 export default async function JobDetailPage({
   params,
@@ -37,6 +38,15 @@ export default async function JobDetailPage({
     const { data: team } = await supabase.from("teams").select("name").eq("id", job.team_id).single();
     teamName = team?.name ?? null;
   }
+
+  // Check if user has an active clock-in on this job (no clock_out)
+  const { data: activeTimeEntry } = await supabase
+    .from("time_entries")
+    .select("id, clock_in")
+    .eq("job_id", id)
+    .eq("user_id", user.id)
+    .is("clock_out", null)
+    .maybeSingle();
 
   // Get quoted costs grouped by category
   const { data: quotedCosts } = await supabase
@@ -130,6 +140,7 @@ export default async function JobDetailPage({
               Edit
             </Link>
           )}
+          <ClockButton jobId={job.id} activeEntry={activeTimeEntry} />
         </div>
       </div>
 

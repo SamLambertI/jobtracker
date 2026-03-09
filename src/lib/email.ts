@@ -51,3 +51,47 @@ export async function sendInviteEmail({
 
   return { error: error ? error.message : null };
 }
+
+export async function sendUpdateNotification({
+  to,
+  authorName,
+  teamName,
+  doneToday,
+  upNext,
+}: {
+  to: string[];
+  authorName: string;
+  teamName: string | null;
+  doneToday: string;
+  upNext: string | null;
+}) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const teamLabel = teamName ? ` (${teamName})` : "";
+  const upNextHtml = upNext
+    ? `<p style="color: #475569; font-size: 14px; line-height: 1.6;"><strong>Up next:</strong><br/>${upNext.replace(/\n/g, "<br/>")}</p>`
+    : "";
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to,
+    subject: `Daily update from ${authorName}${teamLabel}`,
+    html: `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <h2 style="color: #0f172a; margin-bottom: 8px;">Daily Update</h2>
+        <p style="color: #94a3b8; font-size: 13px; margin-bottom: 16px;">
+          ${authorName}${teamLabel} &middot; ${new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+        </p>
+        <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+          <strong>Done today:</strong><br/>${doneToday.replace(/\n/g, "<br/>")}
+        </p>
+        ${upNextHtml}
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+        <p style="color: #94a3b8; font-size: 12px;">
+          Job Tracker — Profitability tracking for service businesses
+        </p>
+      </div>
+    `,
+  });
+}

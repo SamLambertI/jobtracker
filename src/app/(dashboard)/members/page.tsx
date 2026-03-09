@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { removeUser, cancelInvite } from "./actions";
 import { InviteForm } from "./invite-form";
 import { CopyButton } from "./copy-button";
+import { TeamSelect } from "./team-select";
 
 export default async function MembersPage({
   searchParams,
@@ -100,7 +101,11 @@ export default async function MembersPage({
                     </span>
                   </td>
                   <td className="px-4 py-3 text-slate-600">
-                    {member.team_id ? teamMap.get(member.team_id) ?? "—" : "—"}
+                    <TeamSelect
+                      userId={member.id}
+                      currentTeamId={member.team_id}
+                      teams={teams ?? []}
+                    />
                   </td>
                   <td className="px-4 py-3 text-right">
                     {member.id !== user.id && (
@@ -132,9 +137,13 @@ export default async function MembersPage({
                     <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
                       {member.role.replace("_", " ")}
                     </span>
-                    {member.team_id && (
-                      <span className="text-xs text-slate-500">{teamMap.get(member.team_id) ?? "—"}</span>
-                    )}
+                  </div>
+                  <div className="mt-2">
+                    <TeamSelect
+                      userId={member.id}
+                      currentTeamId={member.team_id}
+                      teams={teams ?? []}
+                    />
                   </div>
                 </div>
                 {member.id !== user.id && (
