@@ -48,8 +48,11 @@ Everyone in the company has one of four roles. What you can see and do depends o
 | Invite & remove members | Yes | — | — | — |
 | Manage price list | Yes | Yes | — | — |
 | Post daily updates | Yes | Yes | Yes | Yes |
+| Clock in / out | Yes | Yes | Yes | Yes |
+| View all timesheets | Yes | Yes | — | — |
+| View own timesheet | Yes | Yes | Yes | Yes |
 
-**Operatives** can view jobs, upload site photos, add timeline notes, and post daily updates — but they can't see any financial information.
+**Operatives** can view jobs, upload site photos, add timeline notes, clock in/out, and post daily updates — but they can't see any financial information (no costs, quotes, or margins).
 
 ---
 
@@ -58,9 +61,9 @@ Everyone in the company has one of four roles. What you can see and do depends o
 The home screen gives you a snapshot of how things are going:
 
 - **Active Jobs** — how many jobs are live (not yet invoiced)
-- **Total Quoted** — the total value of all active quotes
-- **Total Actual** — what's been spent so far
-- **Profit / Margin** — are you making or losing money overall
+- **Total Quoted** — the total value of all active quotes *(not visible to operatives)*
+- **Total Actual** — what's been spent so far *(not visible to operatives)*
+- **Profit / Margin** — are you making or losing money overall *(not visible to operatives)*
 
 ### Profitability Traffic Lights
 
@@ -70,6 +73,8 @@ Throughout the app you'll see coloured dots next to jobs:
 - **Amber** — Within 10% of budget. Keep an eye on it.
 - **Red** — Over budget. Costs have exceeded the quote.
 - **Grey** — No actual costs logged yet.
+
+*(Traffic lights are not visible to operatives.)*
 
 ### Jobs Needing Attention
 
@@ -104,9 +109,59 @@ To change a job's status, open the job and tap the status button (e.g. "Mark as 
 Tap any job to see its full detail:
 
 - **Client info** — address, email, phone
-- **Financial summary** — quoted total, actual total, profit
-- **Cost breakdown** — a table comparing quoted vs actual costs by category
+- **Financial summary** — quoted total, actual total, profit *(not visible to operatives)*
+- **Cost breakdown** — a table comparing quoted vs actual costs by category *(not visible to operatives)*
 - **Quick actions** — links to timeline, photos, quoted costs, actual costs
+- **Clock in/out** — clock in to this job directly from the detail page
+
+---
+
+## Clock In / Out
+
+The clock feature tracks when you arrive at and leave site.
+
+### How to Clock In
+
+1. Tap **Clock** from the bottom tab bar (mobile) or top menu (desktop)
+2. Optionally select a job from the dropdown — or leave it as "No job" for yard work or general tasks
+3. Tap the big green **Clock in** button
+4. Your phone will ask for location permission — allow it to drop a GPS pin
+
+You can also clock in directly from a **job detail page** — this automatically assigns you to that job.
+
+### While Clocked In
+
+- You'll see a green pulsing dot and your elapsed time
+- You can change which job you're allocated to at any time using the dropdown
+- Tap the red **Clock out** button when you leave site — another GPS pin is captured
+
+### GPS Location
+
+When you clock in and out, the app captures your GPS location (with your permission). Managers can see these locations as map pins on the timesheet to verify you were on site.
+
+---
+
+## Timesheet
+
+The timesheet shows a weekly breakdown of hours.
+
+### Viewing Your Timesheet
+
+1. Go to **More** → **Timesheet** (or **Clock** page → **View timesheet**)
+2. You'll see your hours grouped by day, showing which job you were on, clock in/out times, and duration
+3. Use the **Prev** / **Next** buttons to view previous weeks
+
+### Viewing Team Timesheets (Owner / Manager)
+
+Owners and managers can see everyone's timesheets:
+
+1. Go to the **Timesheet** page
+2. Use the name filter buttons at the top to view a specific team member, or tap **Everyone** to see all
+3. Each entry shows clock times, duration, job name, and clickable GPS map pins ("In pin" / "Out pin")
+
+### Entries Without a Job
+
+If someone clocked in without selecting a job (e.g. yard work), it shows as *"No job allocated"* on the timesheet.
 
 ---
 
@@ -190,7 +245,7 @@ Anyone can add a text note to the timeline — useful for leaving updates about 
 
 Every team member can post an end-of-day update.
 
-1. Go to **Updates** from the menu (or bottom tab on mobile)
+1. Go to **Updates** from the menu (or via **More** on mobile)
 2. Write what you got done today (required)
 3. Optionally write what's coming up next
 4. Tap **Post update**
@@ -221,11 +276,16 @@ Go to **Members** to see everyone in your company.
 
 ---
 
-## Mobile Tips
+## Mobile Navigation
 
 The app is designed to work well on your phone:
 
-- **Bottom tab bar** — Home, Calendar, Jobs, Updates, and Settings are all one tap away
+- **Bottom tab bar** — five tabs for quick access:
+  - **Home** — dashboard overview
+  - **Calendar** — job schedule
+  - **Jobs** — full job list
+  - **Clock** — clock in/out
+  - **More** — updates, timesheet, settings, and management pages
 - **Large tap targets** — buttons and inputs are sized for thumbs
 - **Card layouts** — tables become stacked cards on small screens
 - **Camera access** — upload receipt photos and site photos directly from your phone camera
@@ -237,17 +297,19 @@ The app is designed to work well on your phone:
 
 | I want to... | Go to... |
 |---|---|
+| Clock in/out | Clock (bottom tab) |
 | See how jobs are doing financially | Dashboard (home page) |
 | Create a new job | Jobs → New job |
 | Log costs on a job | Jobs → [job] → Actual costs |
 | Upload a site photo | Jobs → [job] → Photos |
 | Leave a note on a job | Jobs → [job] → Timeline |
-| Post an end-of-day update | Updates |
+| Post an end-of-day update | More → Daily Updates |
+| View my hours this week | More → Timesheet |
 | Check the schedule | Calendar |
-| Set up standard prices | Price List |
-| Invite a team member | Members → Invite form |
-| Create a team | Teams → New team |
-| Change someone's team | Members → Team dropdown |
+| Set up standard prices | More → Price List |
+| Invite a team member | More → Members → Invite form |
+| Create a team | More → Teams → New team |
+| Change someone's team | More → Members → Team dropdown |
 
 ---
 
