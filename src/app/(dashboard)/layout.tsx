@@ -72,10 +72,10 @@ export default async function DashboardLayout({
                 Updates
               </Link>
               <Link
-                href="/timesheet"
+                href="/clock"
                 className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               >
-                Timesheet
+                Clock
               </Link>
               {isOwnerOrManager && (
                 <>
@@ -146,13 +146,13 @@ export default async function DashboardLayout({
             <span className="text-[10px] font-medium">Jobs</span>
           </Link>
           <Link
-            href="/timesheet"
+            href="/clock"
             className="flex min-h-[56px] flex-1 flex-col items-center justify-center gap-0.5 py-2 text-slate-500 active:bg-slate-50"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-[10px] font-medium">Time</span>
+            <span className="text-[10px] font-medium">Clock</span>
           </Link>
           <Link
             href="/more"

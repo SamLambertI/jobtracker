@@ -31,12 +31,16 @@ export default async function MorePage() {
       </div>
 
       <div className="space-y-2">
-        <Link href="/updates" className={linkClass}>
-          <span>Daily Updates</span>
+        <Link href="/clock" className={linkClass}>
+          <span>Clock In / Out</span>
           <span className="text-slate-400">&rsaquo;</span>
         </Link>
         <Link href="/timesheet" className={linkClass}>
           <span>Timesheet</span>
+          <span className="text-slate-400">&rsaquo;</span>
+        </Link>
+        <Link href="/updates" className={linkClass}>
+          <span>Daily Updates</span>
           <span className="text-slate-400">&rsaquo;</span>
         </Link>
         <Link href="/calendar" className={linkClass}>

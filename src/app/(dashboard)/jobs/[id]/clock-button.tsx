@@ -25,7 +25,6 @@ export function ClockButton({ jobId, activeEntry }: ClockButtonProps) {
           formRef.current?.requestSubmit();
         },
         () => {
-          // Location denied or unavailable — submit without GPS
           formRef.current?.requestSubmit();
         },
         { enableHighAccuracy: true, timeout: 10000 }
@@ -44,7 +43,7 @@ export function ClockButton({ jobId, activeEntry }: ClockButtonProps) {
     return (
       <form ref={formRef} action={clockOut}>
         <input type="hidden" name="entryId" value={activeEntry.id} />
-        <input type="hidden" name="jobId" value={jobId} />
+        <input type="hidden" name="returnTo" value={`/jobs/${jobId}`} />
         <input ref={latRef} type="hidden" name="lat" />
         <input ref={lngRef} type="hidden" name="lng" />
         <button
@@ -66,6 +65,7 @@ export function ClockButton({ jobId, activeEntry }: ClockButtonProps) {
   return (
     <form ref={formRef} action={clockIn}>
       <input type="hidden" name="jobId" value={jobId} />
+      <input type="hidden" name="returnTo" value={`/jobs/${jobId}`} />
       <input ref={latRef} type="hidden" name="lat" />
       <input ref={lngRef} type="hidden" name="lng" />
       <button

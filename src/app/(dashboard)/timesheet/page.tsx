@@ -78,7 +78,7 @@ export default async function TimesheetPage({
       clock_out_lat,
       clock_out_lng,
       users!inner(name),
-      jobs!inner(client_name)
+      jobs(client_name)
     `
     )
     .eq("company_id", profile.company_id)
@@ -244,7 +244,7 @@ export default async function TimesheetPage({
                   </div>
                   <div className="divide-y divide-slate-50">
                     {dayEntries.map((entry) => {
-                      const jobData = entry.jobs as unknown as { client_name: string };
+                      const jobData = entry.jobs as unknown as { client_name: string } | null;
                       const clockIn = new Date(entry.clock_in);
                       const clockOut = entry.clock_out ? new Date(entry.clock_out) : null;
                       const duration = clockOut
@@ -256,12 +256,18 @@ export default async function TimesheetPage({
                           key={entry.id}
                           className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2"
                         >
-                          <Link
-                            href={`/jobs/${entry.job_id}`}
-                            className="text-sm font-medium text-slate-900 hover:text-blue-600"
-                          >
-                            {jobData.client_name}
-                          </Link>
+                          {entry.job_id && jobData ? (
+                            <Link
+                              href={`/jobs/${entry.job_id}`}
+                              className="text-sm font-medium text-slate-900 hover:text-blue-600"
+                            >
+                              {jobData.client_name}
+                            </Link>
+                          ) : (
+                            <span className="text-sm font-medium text-slate-400 italic">
+                              No job allocated
+                            </span>
+                          )}
                           <span className="text-xs text-slate-500">
                             {clockIn.toLocaleTimeString("en-GB", {
                               hour: "2-digit",
